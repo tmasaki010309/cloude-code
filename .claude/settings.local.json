@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"C:/Users/hiant/OneDrive/デスクトップ/claude code/CMO/Skills\")",
+      "Bash(mkdir -p \"C:/Users/hiant/OneDrive/デスクトップ/claude code/CMO/AIセミナー/出力/下書き\")",
+      "Bash(mkdir -p \"C:/Users/hiant/OneDrive/デスクトップ/claude code/CMO/AIセミナー/出力/評価\")",
+      "Bash(mkdir -p \"C:/Users/hiant/OneDrive/デスクトップ/claude code/CMO/AIセミナー/出力/最終版\")",
+      "Skill(schedule)",
+      "Bash(git --version)",
+      "Bash(gh --version)",
+      "Bash(git config:*)"
+    ]
+  }
+}

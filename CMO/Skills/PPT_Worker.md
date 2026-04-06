@@ -22,18 +22,26 @@
 
 ## デザインルール（GenSpark風フォーマット）
 
-### カラーパレット
+### カラーパレット（青系統一）
+色は青系5段階で統一する（緑・オレンジ・赤・紫は使用しない）。
+
 | 用途 | カラー名 | HEX |
 |------|---------|-----|
 | スライド背景 | BG | #F8FAFC |
 | ダークテキスト | DTXT | #1E293B |
-| ミディアムテキスト | MTXT | #64748B |
+| ミディアムテキスト | MTXT | #475569 |
 | ライトテキスト | LTXT | #94A3B8 |
-| メインネイビー | NAVY | #1E3A5F |
-| メインブルー | BLUE | #2563EB |
-| 薄ブルー背景 | LBLUE | #EFF6FF |
-| ボーダー | BORDER | #CBD5E1 |
-| カード背景 | CARD_BG | #F1F5F9 |
+| 最濃ネイビー | NAVY | #0F1F3D |
+| 濃ネイビー | B1 | #1E3A5F |
+| ダークブルー | B2 | #1D4ED8 |
+| メインブルー | B3 | #2563EB |
+| ブライトブルー | B4 | #3B82F6 |
+| 超薄ブルー背景 | LBLUE | #EFF6FF |
+| ボーダー（薄ブルー） | BORDER | #BFDBFE |
+| カード背景 | CARD | #F1F5F9 |
+
+セクション区切りスライド（PART 1〜4）は以下の濃淡で区別する：
+- Part1: #0F1F3D（最濃）、Part2: #1A3560、Part3: #1A3A8F、Part4: #1D4ED8
 
 ### スライド構成パターン
 
@@ -61,31 +69,34 @@
 ### コンポーネント仕様
 
 ```python
-# ヘッダー
-add_rect(slide, 0.25, 0.18, 0.07, 0.56, BLUE)   # 縦ライン
-add_text(slide, title, 0.45, 0.2, 9.5, 0.6, size=22, bold=True, color=NAVY)
-add_text(slide, session_label, 10.5, 0.28, 2.7, 0.35, size=9, color=LTXT, align=RIGHT)
-add_rect(slide, 0, 0.9, 13.33, 0.04, BORDER)    # 下線
+# ヘッダー（高さ1.0インチ）
+add_rect(slide, 0.25, 0.2, 0.07, 0.6, BLUE)             # 縦ライン
+add_text(slide, title, 0.45, 0.2, 9.5, 0.65, size=22, bold=True, color=NAVY)
+add_text(slide, session_label, 10.2, 0.28, 3.0, 0.4, size=11, color=LTXT, align=RIGHT)
+add_rect(slide, 0, 1.0, 13.33, 0.04, BORDER)             # 下線
 
-# KEY MESSAGEボックス
-add_rect(slide, 0.3, t, 12.73, 1.05, LBLUE, line=BLUE, lw=1)
-add_rect(slide, 0.3, t, 0.07, 1.05, BLUE)
-add_text(slide, "KEY MESSAGE", ...)  # 9pt, BLUE, italic
-add_text(slide, title, ...)          # 16pt, bold, NAVY
-add_text(slide, body, ...)           # 11pt, MTXT
+# KEY MESSAGEボックス（高さ1.35インチ）
+add_rect(slide, 0.3, t, 12.73, 1.35, LBLUE, line=BLUE, lw=1)
+add_rect(slide, 0.3, t, 0.07, 1.35, BLUE)
+add_text(slide, "KEY MESSAGE", ...)  # 11pt, BLUE, italic
+add_text(slide, title, ...)          # 17pt, bold, NAVY
+add_text(slide, body, ...)           # 12pt, MTXT
 
 # カード
 add_rect(slide, l, t, w, h, WHITE, line=BORDER, lw=0.8)
-add_rect(slide, l, t, w, 0.45, LBLUE, line=BORDER, lw=0.5)   # ヘッダー背景
-add_rect(slide, l, t, 0.07, 0.45, accent_color)                # 左アクセント
+add_rect(slide, l, t, w, 0.5, LBLUE, line=BORDER, lw=0.5)    # ヘッダー背景
+add_rect(slide, l, t, 0.07, 0.5, accent_color)                 # 左アクセント
 
-# ピル型タグ
-add_rect(slide, l, t, tw, 0.32, color, rounded=True)  # 角丸=True
+# ピル型タグ（動的幅：max(len(text)*0.18+0.35, 1.1)で計算）
+tw = max(len(text)*0.18+0.35, 1.1)
+add_rect(slide, l, t, tw, 0.34, color, rounded=True)  # 角丸=True
+# ※右端13.1インチ超になる場合は描画しない（はみ出し防止）
 
-# テイクアウェイバー（y=6.9）
-add_rect(slide, 0, 6.9, 13.33, 0.6, CARD_BG, line=BORDER, lw=0.5)
-add_rect(slide, 0.3, 7.0, 1.8, 0.38, NAVY, rounded=True)
-add_text(slide, "今日の持ち帰り", ...)
+# テイクアウェイバー（y=6.85）
+add_rect(slide, 0, 6.85, 13.33, 0.65, CARD, line=BORDER, lw=0.5)
+add_rect(slide, 0.3, 6.97, 1.9, 0.42, NAVY, rounded=True)
+add_text(slide, "今日の持ち帰り", ..., size=11, bold=True)
+# アイテムテキスト: size=12, x=2.4から5.4インチ間隔
 ```
 
 ---
@@ -171,11 +182,36 @@ BLANK = prs.slide_layouts[6]       # 白紙レイアウト
 
 ---
 
+## フォントサイズ規則（視認性ルール）
+
+| 用途 | 最小サイズ | 推奨 |
+|------|----------|------|
+| スライドタイトル | 22pt | 22〜28pt |
+| セクションタイトル | 40pt | 44〜52pt |
+| カードタイトル | 13pt | 14〜16pt |
+| KEY MESSAGE タイトル | 16pt | 17〜18pt |
+| KEY MESSAGE ラベル | 11pt | 11pt（italic） |
+| KEY MESSAGE 本文 | 12pt | 12〜13pt |
+| 本文・箇条書き（Level 0） | 12pt | 13pt |
+| 本文・箇条書き（Level 1以下） | 12pt | 12pt（Level上限で削減しない） |
+| タグ・ラベル | 11pt | 11pt |
+| テイクアウェイ項目 | 12pt | 12pt |
+| セッション名（右上） | 11pt | 11pt |
+
+**グレーテキスト（MTXT）を使う場合は必ず太字（bold=True）を適用し視認性を確保する。**
+
+---
+
 ## 作業開始前チェックリスト
 - [ ] `読み込み資料/` に元資料（XMind・PNG・テキスト等）が格納されている
 - [ ] フォントが **Meiryo UI** に設定されている
+- [ ] カラーが **青系5段階** に統一されている（緑・オレンジ・赤・紫不使用）
 - [ ] GenSpark風フォーマット（白背景・カード・縦ライン・セクションスプリット）を使用している
 - [ ] プラスアルファのコンテンツ（統計・シミュレーション・失敗対策）が含まれている
+- [ ] 各カードの根拠・詳細は **5項目以上** 記載している
+- [ ] 内容が多いページは **1ページに詰め込まず分割** する
 - [ ] 「今日の持ち帰り」バーが各コンテンツスライドに付いている
+- [ ] すべてのテキストが **最小12pt** を満たしている
+- [ ] グレーテキスト使用時は **太字** で視認性を確保している
 - [ ] スライド数は16〜18枚程度に収める
 - [ ] 生成スクリプトは `出力/下書き/generate_ppt_vX.py` に保存する
